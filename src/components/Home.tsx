@@ -1,12 +1,18 @@
 "use client";
-import { sendMessage } from "@/app/actions/sendMessage";
 import { Message } from "@/lib/type";
 import React, { useState } from "react";
 import { ChatMessage } from "./ChatMessage";
 import { MessageInput } from "./MessageInput";
+import { useChat } from "@/context/ChatProvider";
+import { sendMessageAction } from "@/app/actions/sendMessageAction";
 
 export default function Home() {
-  const [messages, setMessages] = useState<Message[]>([]);
+ 
+  const { messages, setMessages }: { 
+    messages: Message[]; 
+    setMessages: React.Dispatch<React.SetStateAction<Message[]>> ;
+    setNewChat: React.Dispatch<React.SetStateAction<boolean>>
+  } = useChat();
   const [loading, setLoading] = useState(false);
 
   const handleSendMessage = async (content: string) => {
@@ -20,7 +26,7 @@ export default function Home() {
     setMessages((prev) => [...prev, userMessage]);
 
     // Get AI response
-    const response = await sendMessage(content);
+    const response = await sendMessageAction(content);
 
     // Add AI message
     const aiMessage: Message = {

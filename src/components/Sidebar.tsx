@@ -1,3 +1,4 @@
+'use client';
 import { Calendar, Home, Inbox, Plus, Search, Settings } from "lucide-react";
 
 import {
@@ -10,6 +11,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { useChat } from "@/context/ChatProvider";
 
 // Menu items.
 const items = [
@@ -20,28 +22,34 @@ const items = [
   },
 ];
 
-export function AppSidebar({onNewChat}) {
+export function AppSidebar() {
+  const {setNewChat,setMessages,messages}=useChat();
+
+const handleNewChat=()=>{
+setMessages([]);
+}
+
   return (
     <Sidebar>
       <SidebarContent>
         <SidebarGroup>
           <div className="flex justify-between">
             <SidebarGroupLabel>Application</SidebarGroupLabel>
-            <SidebarGroupLabel
-            onClick={onNewChat}
+            <SidebarGroupLabel className="cursor-pointer"
+            onClick={handleNewChat}
             >
               <Plus /> 
             </SidebarGroupLabel>
           </div>
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
+              {messages?.map((item) => (
+                <SidebarMenuItem key={item.id}>
                   <SidebarMenuButton asChild>
-                    <a href={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </a>
+                    {/* <a href={item.url}> */}
+                      {/* <item.icon /> */}
+                      <span>{item.content}</span>
+                    {/* </a> */}
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
