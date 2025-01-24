@@ -23,7 +23,8 @@ const items = [
 ];
 
 export function AppSidebar() {
-  const {setNewChat,setMessages,messages}=useChat();
+  const {setNewChat,setMessages,messages,allChats}=useChat();
+
 
 const handleNewChat=()=>{
 setMessages([]);
@@ -43,13 +44,12 @@ setMessages([]);
           </div>
           <SidebarGroupContent>
             <SidebarMenu>
-              {messages?.map((item) => (
-                <SidebarMenuItem key={item.id}>
+              {messages?.map((item,i) => (
+                <SidebarMenuItem key={i}>
                   <SidebarMenuButton asChild>
-                    {/* <a href={item.url}> */}
-                      {/* <item.icon /> */}
+                  
                       <span>{item.content}</span>
-                    {/* </a> */}
+                    
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}

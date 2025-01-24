@@ -1,5 +1,5 @@
 "use client";
-import { Message } from "@/lib/type";
+import { Chat, Message } from "@/lib/type";
 import React, { useState } from "react";
 import { ChatMessage } from "./ChatMessage";
 import { MessageInput } from "./MessageInput";
@@ -7,36 +7,66 @@ import { useChat } from "@/context/ChatProvider";
 import { sendMessageAction } from "@/app/actions/sendMessageAction";
 
 export default function Home() {
- 
+const [allChats, setAllChats] = useState<Chat[]>([]);
   const { messages, setMessages }: { 
     messages: Message[]; 
-    setMessages: React.Dispatch<React.SetStateAction<Message[]>> ;
-    setNewChat: React.Dispatch<React.SetStateAction<boolean>>
+    setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
+  
+    // setAllChats: React.Dispatch<React.SetStateAction<Chat[]>>;
   } = useChat();
   const [loading, setLoading] = useState(false);
 
+
+  console.log('alll',allChats)
   const handleSendMessage = async (content: string) => {
-    setLoading(true);
-    // Add user message
-    const userMessage: Message = {
-      id: Date.now().toString(),
-      content,
-      role: "user",
-    };
-    setMessages((prev) => [...prev, userMessage]);
-
-    // Get AI response
-    const response = await sendMessageAction(content);
-
-    // Add AI message
-    const aiMessage: Message = {
-      id: (Date.now() + 1).toString(),
-      content: response || "Sorry, I could not process that.",
-      role: "assistant",
-    };
-    setMessages((prev) => [...prev, aiMessage]);
-    setLoading(false);
+    try {
+      setLoading(true);
+      // Add user message
+      const userMessage = {
+        id: Date.now().toString(),
+        content,
+        role: "user" as const,
+      };
+      
+      // Update messages state with user message
+      setMessages(prev => [...prev, userMessage]);
+      
+      // Create new chat with user message
+      const newChat = {
+        id: Date.now().toString(),
+        messages: [...messages, userMessage], // Include existing messages and new user message
+      };
+      setAllChats(prev => [...prev, newChat]);
+  
+      // Get AI response
+      const response = await sendMessageAction(content);
+  
+      // Create AI message
+      const aiMessage = {
+        id: (Date.now() + 1).toString(),
+        content: response || "Sorry, I could not process that.",
+        role: "assistant" as const,
+      };
+  
+      // Update messages with AI response
+      setMessages(prev => [...prev, aiMessage]);
+  
+      // Update chat history with AI response
+      setAllChats(prev => 
+        prev.map(chat => 
+          chat.id === newChat.id 
+            ? { ...chat, messages: [...chat.messages, aiMessage] }
+            : chat
+        )
+      );
+  
+    } catch (error) {
+      console.error('Error:', error);
+    } finally {
+      setLoading(false);
+    }
   };
+
   return (
     <div className="flex flex-col h-screen">
       <div className="flex-1 overflow-y-auto px-4">

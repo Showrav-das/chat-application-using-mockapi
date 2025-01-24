@@ -6,19 +6,16 @@ export type Message = {
 
 export type Chat = {
   id: string;
-  title: string;
   messages: Message[];
-  createdAt: Date;
+  // createdAt: Date;
 };
 
 
 export type ChatContextType = {
-  chats: Chat[];
-  activeChat: string | null;
-  setActiveChat: (id: string) => void;
-  createNewChat: () => void;
+  
+  allChats: Chat[];
   setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
   messages: Message[];
-  addMessage: (chatId: string, message: Message) => void;
-  setNewChat: React.Dispatch<React.SetStateAction<boolean>>
+  setNewChat: React.Dispatch<React.SetStateAction<boolean>>;
+  setAllChats: React.Dispatch<React.SetStateAction<Chat[]>>;
 };
