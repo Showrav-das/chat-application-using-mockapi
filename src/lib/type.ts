@@ -10,12 +10,15 @@ export type Chat = {
   // createdAt: Date;
 };
 
-
 export type ChatContextType = {
-  
   allChats: Chat[];
   setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
   messages: Message[];
-  setNewChat: React.Dispatch<React.SetStateAction<boolean>>;
   setAllChats: React.Dispatch<React.SetStateAction<Chat[]>>;
+  setFirstTimeChat: React.Dispatch<React.SetStateAction<boolean>>;
+  firstTimeChat: boolean;
+  handleNewChat: () => void;
+  activeChatIndex: number;
+  setActiveChatIndex: React.Dispatch<React.SetStateAction<number>>;
+  handleSwitchChat: (index: number) => void;
 };
