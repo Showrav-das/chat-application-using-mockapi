@@ -1,3 +1,6 @@
+    <h1>Locally setup process:</h1>
+
+  <p>If you clone this repository and execute the command npm run dev, the project will start running on your local machine. This allows you to test and interact with the application in a development environment.</p>
   <h1>Project Documentation</h1>
 
   <h2>Overview</h2>
